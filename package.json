@@ -1,0 +1,11 @@
+{
+  "name": "icon-node-query-samples",
+  "version": "1.0.0",
+  "description": "Several code samples to get data from nodes in the ICON Blockchain",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fidelve",
+  "license": "MIT"
+}
