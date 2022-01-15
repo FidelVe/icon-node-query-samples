@@ -5,8 +5,8 @@ The following is a project where I plan to publish different code examples on ho
 
 ## Examples
 
-* **get-preps.js**
-* **query-node.js**
+* [get-preps.js](get-preps.js)
+* [query-node.js](query-node.js)
 
 ## Built With
 
