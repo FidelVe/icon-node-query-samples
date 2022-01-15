@@ -1,6 +1,6 @@
 # ICON Node Query Samples
 
-The following is project where I plan to publish different code examples on how to make different querys to the ICON Blockchain using JavaScript (nodejs).
+The following is a project where I plan to publish different code examples on how to make different queries to the ICON Blockchain using JavaScript (nodejs).
 
 
 ## Examples
