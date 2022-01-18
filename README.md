@@ -7,6 +7,7 @@ The following is a project where I plan to publish different code examples on ho
 
 * [get-preps.js](get-preps.js)
 * [query-node.js](query-node.js)
+* [get-block-producers-data.js](get-block-producers-data.js)
 
 ## Built With
 
