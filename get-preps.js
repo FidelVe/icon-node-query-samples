@@ -65,3 +65,4 @@ req.on('error', err => {
 
 req.write(DATA);
 req.end();
+console.log(DATA);
