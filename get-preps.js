@@ -1,5 +1,5 @@
 // This sample code gets the list of the top 22 PReps by delegation
-// in the ICON blockchain by making an http POST request into a node API 
+// in the ICON blockchain by making an http POST request into a node API
 // and calling the 'getPReps' method into the chain main smart contract
 //
 // From the queried data we get a list of the top 22 PReps
@@ -8,61 +8,44 @@
 //
 
 // Imports
-//
-const fs = require('fs');
-const http = require('http');
+const fs = require("fs");
+const { httpsRequest } = require("./api");
 
 // Global constants
-//
-const NODES = JSON.parse(fs.readFileSync('files/nodes.json'));
+const NODES = JSON.parse(fs.readFileSync("data/nodes.json"));
 const PARAMS = {
-  hostname: NODES.NODES[2],
-  port: 9000,
-  path: '/api/v3',
-  method: 'POST',
+  hostname: NODES.NODES[1],
+  path: "/api/v3",
+  method: "POST",
   headers: {
-    'content-type': 'text/plain',
-    'charset': 'UTF-8'
+    "content-type": "text/plain",
+    charset: "UTF-8"
   }
 };
 const DATA = JSON.stringify({
-  jsonrpc: '2.0',
-  method: 'icx_call',
+  jsonrpc: "2.0",
+  method: "icx_call",
   id: 1,
   params: {
-    to: 'cx0000000000000000000000000000000000000000',
-    dataType: 'call',
+    to: "cx0000000000000000000000000000000000000000",
+    dataType: "call",
     data: {
-      method: 'getPReps',
+      method: "getPReps",
       params: {
-        startRanking: '0x1',
-        endRanking: '0x16'
+        startRanking: "0x1",
+        endRanking: "0x16"
       }
     }
   }
 });
 
-const req = http.request(PARAMS, res => {
-  // Print status code on console
-  console.log('Status Code: ' + res.statusCode);
-
-  // Process chunked data
-  let rawData = '';
-  res.on('data', chunk => {
-    rawData += chunk;
-  });
-
-  // Print complete data on console
-  res.on('end', () => {
-    console.log(JSON.parse(rawData));
-  });
-});
-
-req.on('error', err => {
-  // Print error message on console
-  console.log('Got error message: ' + err.message);
-});
-
-req.write(DATA);
-req.end();
-console.log(DATA);
+// Run async httpsRequest and print response on console
+(async () => {
+  try {
+    let response = await httpsRequest(PARAMS, DATA);
+    console.log(response);
+  } catch (err) {
+    console.log("Error running httpsRequest");
+    console.log(err);
+  }
+})();

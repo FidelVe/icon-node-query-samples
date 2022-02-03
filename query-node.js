@@ -9,34 +9,17 @@
 // Imports
 //
 const fs = require("fs");
-const http = require("http");
+const { httpsRequest } = require("./api");
 
 // Global constants
-//
-const NODES = JSON.parse(fs.readFileSync("files/nodes.json"));
+const NODES = JSON.parse(fs.readFileSync("data/nodes.json"));
+
 const PARAMS = {
-  hostname: NODES.NODES[2],
-  port: 9000,
-  path: "/admin/chain/0x1"
+  hostname: NODES.NODES[1],
+  path: "/admin/chain/0x1",
 };
 
-const query = http.get(PARAMS, res => {
-  // Print status code on console
-  console.log("Status Code: " + res.statusCode);
-
-  // Process chunked data
-  let rawData = "";
-  res.on("data", chunk => {
-    rawData += chunk;
-  });
-
-  // Print complete data on console
-  res.on("end", () => {
-    console.log(JSON.parse(rawData));
-  });
-});
-
-query.on("error", err => {
-  // Print error message on console
-  console.log("Got error: " + err.message);
-});
+(async () => {
+  let request = await httpsRequest(PARAMS);
+  console.log(request);
+})();
