@@ -5,26 +5,19 @@
 //
 
 // Imports
-//
-const http = require("http");
+const fs = require("fs");
+const { httpsRequest } = require("./api");
 
 // Global constants
-//
-const NODES = [
-  "ctz.solidwallet.io",
-  "api.icon.geometry.io",
-  "52.196.159.184",
-  "35.170.9.187",
-  "104.21.5.198"
-];
+const NODES = JSON.parse(fs.readFileSync("data/nodes.json"));
+
+// Global constants
 const PARAMS = {
-  hostname: NODES[2],
-  port: 9000,
+  hostname: NODES.NODES[2],
   path: "/admin/chain/0x1"
 };
 const PARAMS2 = {
-  hostname: NODES[2],
-  port: 9000,
+  hostname: NODES.NODES[1],
   path: "/api/v3",
   method: "POST",
   headers: {
@@ -48,55 +41,16 @@ const DATA = JSON.stringify({
     }
   }
 });
-
-async function asyncQuery(params, data = false) {
-  // Async http request made with an http.request wrapped in a Promise
-  //
-  const promisifiedQuery = new Promise((resolve, reject) => {
-    const query = http.request(params, res => {
-      // Print status code on console
-      console.log("Status Code: " + res.statusCode);
-
-      // Process chunked data
-      let rawData = "";
-      res.on("data", chunk => {
-        rawData += chunk;
-      });
-
-      // when request completed, pass the data to the 'resolve' callback
-      res.on("end", () => {
-        let queryResponse = JSON.parse(rawData);
-        resolve(queryResponse);
-      });
-
-      // if error, print on console
-      res.on("error", err => {
-        console.log("Got error: ", +err.message);
-      });
-    });
-    if (data != false) {
-      // If data param is passed into function then we assume the call is
-      // for path '/api/v3' and method is 'POST' so we send a .write to
-      // the server.
-      //
-      query.write(data);
-    }
-    // end request
-    query.end();
-  });
-  // wait for the response and return it
-  let result = await promisifiedQuery;
-  return result;
-}
-
 async function asyncRun() {
   // run the entire program inside an async function to be able to use await
   // and wait for the servers to reply to the different queries
   //
-  let resultQuery1 = await asyncQuery(PARAMS);
-  let resultQuery2 = await asyncQuery(PARAMS2, DATA);
-  let roots = resultQuery1.module.network.p2p.roots;
+  let resultQuery1 = await httpsRequest(PARAMS);
+  let resultQuery2 = await httpsRequest(PARAMS2, DATA);
+  let roots = resultQuery1.module.network.p2p;
   let preps = resultQuery2.result.preps;
+  console.log(roots);
+  console.log(preps);
   let parsedPreps = [];
 
   preps.forEach(prep => {
@@ -125,3 +79,7 @@ async function asyncRun() {
 }
 
 asyncRun();
+
+process.on("uncaughtException", function(err) {
+  console.log(err);
+});
